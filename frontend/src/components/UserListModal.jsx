@@ -8,17 +8,19 @@ const UserListModal = ({ userId, type, onClose }) => {
   const [loading, setLoading] = useState(true);
   const title = type === "followers" ? "Seguidores" : "Seguindo";
 
+  const fetchUsers = async () => {
+    setLoading(true);
+    try {
+      const response = await api.get(`/users/${userId}/${type}/`);
+      setUsers(response.data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await api.get(`/users/${userId}/${type}/`);
-        setUsers(response.data);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchUsers();
   }, [userId, type]);
 
@@ -45,6 +47,7 @@ const UserListModal = ({ userId, type, onClose }) => {
                 <Link
                   to={`/profile/${u.id}`}
                   className="flex items-center gap-2 hover:underline"
+                  onClick={onClose}
                 >
                   {u.avatar ? (
                     <img
@@ -59,7 +62,11 @@ const UserListModal = ({ userId, type, onClose }) => {
                   )}
                   <span>{u.username}</span>
                 </Link>
-                <FollowButton userId={u.id} isFollowing={false} />
+                <FollowButton
+                  userId={u.id}
+                  isFollowing={u.is_following || false}
+                  onFollowChange={fetchUsers}
+                />
               </li>
             ))}
           </ul>
