@@ -3,9 +3,9 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
-from tweets.models import Comment
+from tweets.models import Comment, Tweet
 from .serializers import CommentSerializer
-from tweets.models import Tweet
+from users.models import Profile
 from .serializers import (
     TweetSerializer, TweetCreateSerializer,
     UserSerializer, ProfileSerializer
@@ -122,8 +122,9 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
     @action(detail=True, methods=['get'])
     def following(self, request, pk=None):
         user = self.get_object()
-        following = user.following.all()
-        serializer = UserSerializer(following, many=True, context={'request': request})
+        profiles = Profile.objects.filter(followers=user)
+        following_users = [p.user for p in profiles]
+        serializer = UserSerializer(following_users, many=True, context={'request': request})
         return Response(serializer.data)
 
 # ---------- REGISTER VIEW ----------
