@@ -11,9 +11,18 @@ const Feed = () => {
     setLoading(true);
     try {
       const { data } = await api.get("/tweets/feed/");
-      setTweets(data.results || []);
+      console.log("Resposta do feed:", data);
+
+      let tweetsArray = [];
+      if (Array.isArray(data)) {
+        tweetsArray = data;
+      } else if (data && Array.isArray(data.results)) {
+        tweetsArray = data.results;
+      }
+      setTweets(tweetsArray);
     } catch (error) {
-      console.error(error);
+      console.error("Erro ao buscar feed:", error);
+      setTweets([]);
     } finally {
       setLoading(false);
     }
