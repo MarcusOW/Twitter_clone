@@ -4,6 +4,7 @@ import api from "../api/client";
 import FollowButton from "./FollowButton";
 import TweetItem from "./TweetItem";
 import EditProfile from "./EditProfile";
+import UserListModal from "./UserListModal";
 import { useAuth } from "../contexts/AuthContext";
 
 const UserProfile = () => {
@@ -12,6 +13,8 @@ const UserProfile = () => {
   const [tweets, setTweets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showEdit, setShowEdit] = useState(false);
+  const [showFollowers, setShowFollowers] = useState(false);
+  const [showFollowing, setShowFollowing] = useState(false);
   const { user, fetchUser } = useAuth();
 
   const fetchProfile = async () => {
@@ -85,8 +88,18 @@ const UserProfile = () => {
                 <h2 className="text-xl font-bold">{profile.user.username}</h2>
                 <p className="text-gray-600">{profile.bio || "Sem bio"}</p>
                 <div className="flex gap-4 text-sm text-gray-500 mt-2">
-                  <span>{profile.followers_count} seguidores</span>
-                  <span>{profile.following_count} seguindo</span>
+                  <span
+                    onClick={() => setShowFollowers(true)}
+                    className="cursor-pointer hover:underline"
+                  >
+                    {profile.followers_count} seguidores
+                  </span>
+                  <span
+                    onClick={() => setShowFollowing(true)}
+                    className="cursor-pointer hover:underline"
+                  >
+                    {profile.following_count} seguindo
+                  </span>
                 </div>
               </div>
               <div className="flex flex-col gap-2 items-end">
@@ -135,6 +148,21 @@ const UserProfile = () => {
             />
           </div>
         </div>
+      )}
+
+      {showFollowers && (
+        <UserListModal
+          userId={userId}
+          type="followers"
+          onClose={() => setShowFollowers(false)}
+        />
+      )}
+      {showFollowing && (
+        <UserListModal
+          userId={userId}
+          type="following"
+          onClose={() => setShowFollowing(false)}
+        />
       )}
     </div>
   );

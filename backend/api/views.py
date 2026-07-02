@@ -112,6 +112,20 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
         serializer = UserSerializer(request.user)
         return Response(serializer.data)
 
+    @action(detail=True, methods=['get'])
+    def followers(self, request, pk=None):
+        user = self.get_object()
+        followers = user.profile.followers.all()
+        serializer = UserSerializer(followers, many=True, context={'request': request})
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['get'])
+    def following(self, request, pk=None):
+        user = self.get_object()
+        following = user.following.all()
+        serializer = UserSerializer(following, many=True, context={'request': request})
+        return Response(serializer.data)
+
 # ---------- REGISTER VIEW ----------
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
