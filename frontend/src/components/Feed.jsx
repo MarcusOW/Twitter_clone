@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import api from "../api/client";
 import TweetItem from "./TweetItem";
 import TweetForm from "./TweetForm";
@@ -7,17 +7,20 @@ const Feed = () => {
   const [tweets, setTweets] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchTweets = async () => {
+  const fetchTweets = useCallback(async () => {
     setLoading(true);
     try {
-      const { data } = await api.get("/tweets/feed/");
+      const response = await api.get("/tweets/feed/");
+      const data = response.data;
       console.log("Resposta do feed:", data);
 
       let tweetsArray = [];
-      if (Array.isArray(data)) {
-        tweetsArray = data;
-      } else if (data && Array.isArray(data.results)) {
-        tweetsArray = data.results;
+      if (data) {
+        if (Array.isArray(data)) {
+          tweetsArray = data;
+        } else if (Array.isArray(data.results)) {
+          tweetsArray = data.results;
+        }
       }
       setTweets(tweetsArray);
     } catch (error) {
@@ -26,11 +29,11 @@ const Feed = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchTweets();
-  }, []);
+  }, [fetchTweets]);
 
   const handleLike = (tweetId, newData) => {
     setTweets((prev) =>

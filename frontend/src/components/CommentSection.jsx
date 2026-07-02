@@ -8,10 +8,23 @@ const CommentSection = ({ tweetId }) => {
 
   const fetchComments = async () => {
     try {
-      const { data } = await api.get(`/comments/?tweet=${tweetId}`);
-      setComments(data);
+      const response = await api.get(`/comments/?tweet=${tweetId}`);
+      const data = response.data;
+      console.log(`Comentários do tweet ${tweetId}:`, data);
+
+      // Garantir que sempre seja um array
+      let commentsArray = [];
+      if (data) {
+        if (Array.isArray(data)) {
+          commentsArray = data;
+        } else if (Array.isArray(data.results)) {
+          commentsArray = data.results;
+        }
+      }
+      setComments(commentsArray);
     } catch (err) {
-      console.error(err);
+      console.error("Erro ao carregar comentários:", err);
+      setComments([]);
     }
   };
 
@@ -26,9 +39,9 @@ const CommentSection = ({ tweetId }) => {
     try {
       await api.post("/comments/", { tweet: tweetId, content });
       setContent("");
-      fetchComments();
+      fetchComments(); // recarrega os comentários
     } catch (err) {
-      console.error(err);
+      console.error("Erro ao adicionar comentário:", err);
     } finally {
       setLoading(false);
     }
@@ -37,11 +50,16 @@ const CommentSection = ({ tweetId }) => {
   return (
     <div className="mt-3 border-t pt-2">
       <div className="space-y-2">
-        {comments.map((c) => (
-          <div key={c.id} className="text-sm">
-            <span className="font-bold">{c.author.username}:</span> {c.content}
-          </div>
-        ))}
+        {comments.length === 0 ? (
+          <p className="text-sm text-gray-500">Nenhum comentário ainda.</p>
+        ) : (
+          comments.map((c) => (
+            <div key={c.id} className="text-sm">
+              <span className="font-bold">{c.author.username}:</span>{" "}
+              {c.content}
+            </div>
+          ))
+        )}
       </div>
       <form onSubmit={handleSubmit} className="flex mt-2 gap-2">
         <input
