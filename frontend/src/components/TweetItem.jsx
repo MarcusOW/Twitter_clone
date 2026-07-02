@@ -2,6 +2,7 @@ import React from "react";
 import { useAuth } from "../contexts/AuthContext";
 import api from "../api/client";
 import { Link } from "react-router-dom";
+import CommentSection from "./CommentSection";
 
 const TweetItem = ({ tweet, onLike, onDelete }) => {
   const { user } = useAuth();
@@ -57,6 +58,7 @@ const TweetItem = ({ tweet, onLike, onDelete }) => {
           </button>
         )}
       </div>
+      <CommentSection tweetId={tweet.id} />
     </div>
   );
 };

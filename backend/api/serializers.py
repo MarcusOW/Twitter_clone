@@ -2,6 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 from users.models import Profile
 from tweets.models import Tweet
+from tweets.models import Comment
 
 # ---------- USER ----------
 class UserSerializer(serializers.ModelSerializer):
@@ -32,6 +33,14 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = ['id', 'user', 'bio', 'avatar', 'followers_count', 'following_count']
 
 # ---------- TWEET ----------
+class CommentSerializer(serializers.ModelSerializer):
+    author = UserSerializer(read_only=True)
+
+    class Meta:
+        model = Comment
+        fields = ['id', 'tweet', 'author', 'content', 'created_at']
+        read_only_fields = ['tweet', 'author', 'created_at']
+
 class TweetSerializer(serializers.ModelSerializer):
     author = UserSerializer(read_only=True)
     likes_count = serializers.IntegerField(source='likes.count', read_only=True)
@@ -39,6 +48,7 @@ class TweetSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Tweet
+        comments = CommentSerializer(many=True, read_only=True, source='comment_set')
         fields = ['id', 'author', 'content', 'created_at', 'likes_count', 'is_liked']
 
     def get_is_liked(self, obj):

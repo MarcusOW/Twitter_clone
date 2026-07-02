@@ -3,6 +3,8 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
+from tweets.models import Comment
+from .serializers import CommentSerializer
 from tweets.models import Tweet
 from .serializers import (
     TweetSerializer, TweetCreateSerializer,
@@ -51,6 +53,16 @@ class TweetViewSet(viewsets.ModelViewSet):
             tweet.likes.add(user)
             liked = True
         return Response({'liked': liked, 'likes_count': tweet.likes.count()})
+
+class CommentViewSet(viewsets.ModelViewSet):
+    queryset = Comment.objects.all().order_by('-created_at')
+    serializer_class = CommentSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def perform_create(self, serializer):
+        tweet_id = self.request.data.get('tweet')
+        tweet = get_object_or_404(Tweet, id=tweet_id)
+        serializer.save(author=self.request.user, tweet=tweet)
 
 # ---------- USER VIEWSET ----------
 class UserViewSet(viewsets.ReadOnlyModelViewSet):

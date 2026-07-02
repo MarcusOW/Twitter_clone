@@ -3,10 +3,12 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from api.views import TweetViewSet, UserViewSet, RegisterView
+from api.views import CommentViewSet
 
 router = DefaultRouter()
 router.register(r'tweets', TweetViewSet, basename='tweet')
 router.register(r'users', UserViewSet, basename='user')
+router.register(r'comments', CommentViewSet, basename='comment')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
