@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from users.models import Profile
-from tweets.models import Tweet, Comment  # <-- importe ambos
+from tweets.models import Tweet, Comment
 
 # ---------- USER ----------
 class UserSerializer(serializers.ModelSerializer):
@@ -19,7 +19,7 @@ class UserSerializer(serializers.ModelSerializer):
     def get_is_following(self, obj):
         request = self.context.get('request')
         if request and request.user.is_authenticated:
-            return obj.followers.filter(id=request.user.id).exists()
+            return obj.profile.followers.filter(id=request.user.id).exists()
         return False
 
 # ---------- PROFILE ----------
@@ -47,11 +47,10 @@ class TweetSerializer(serializers.ModelSerializer):
     author = UserSerializer(read_only=True)
     likes_count = serializers.IntegerField(source='likes.count', read_only=True)
     is_liked = serializers.SerializerMethodField()
-    comments = CommentSerializer(many=True, read_only=True, source='comment_set')  # <-- CORRETO: campo fora do Meta
 
     class Meta:
         model = Tweet
-        fields = ['id', 'author', 'content', 'created_at', 'likes_count', 'is_liked', 'comments']
+        fields = ['id', 'author', 'content', 'created_at', 'likes_count', 'is_liked']
 
     def get_is_liked(self, obj):
         request = self.context.get('request')
