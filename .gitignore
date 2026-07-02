@@ -1,0 +1,86 @@
+# ----------------------
+# Python / Django
+# ----------------------
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+*.egg
+dist/
+build/
+*.whl
+*.log
+*.pid
+*.db
+*.sqlite3
+*.sqlite
+.coverage
+htmlcov/
+.tox/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.env
+.env.local
+.env.*.local
+.venv
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Poetry
+poetry.lock
+poetry.toml
+
+# Django
+**/migrations/__pycache__/
+**/migrations/*.pyc
+**/migrations/*.py.orig
+db.sqlite3
+db.sqlite3-journal
+staticfiles/
+media/
+
+# ----------------------
+# Frontend (React/Vite)
+# ----------------------
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/*.log
+frontend/.env
+frontend/.env.local
+frontend/.env.*.local
+frontend/coverage/
+frontend/build/
+frontend/.cache/
+
+# ----------------------
+# IDE / Editor
+# ----------------------
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+*.iml
+.project
+.classpath
+.settings/
+
+# ----------------------
+# Arquivos de deploy
+# ----------------------
+*.tar.gz
+*.zip
+
+# ----------------------
+# Docker
+# ----------------------
+*.pid
+*.socket
