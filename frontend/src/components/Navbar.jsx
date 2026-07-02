@@ -30,9 +30,20 @@ const Navbar = () => {
             </Link>
             <Link
               to={`/profile/${user.id}`}
-              className="hover:underline text-gray-700"
+              className="hover:underline text-gray-700 flex items-center gap-2"
             >
-              👤 {user.username}
+              {user.avatar ? (
+                <img
+                  src={user.avatar}
+                  alt="Avatar"
+                  className="w-6 h-6 rounded-full object-cover"
+                />
+              ) : (
+                <span className="w-6 h-6 rounded-full bg-blue-500 text-white flex items-center justify-center text-xs font-bold">
+                  {user.username[0].toUpperCase()}
+                </span>
+              )}
+              {user.username}
             </Link>
             <button
               onClick={handleLogout}

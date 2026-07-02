@@ -7,10 +7,11 @@ from tweets.models import Tweet, Comment
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
     is_following = serializers.SerializerMethodField()
+    avatar = serializers.CharField(source='profile.avatar', read_only=True)
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'password', 'first_name', 'last_name', 'is_following']
+        fields = ['id', 'username', 'email', 'password', 'first_name', 'last_name', 'is_following', 'avatar']
 
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)

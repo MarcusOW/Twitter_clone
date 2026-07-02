@@ -63,6 +63,28 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
     filter_backends = [filters.SearchFilter]
     search_fields = ['username', 'email']
 
+    @action(detail=False, methods=['put', 'patch'])
+    def update_profile(self, request):
+        user = request.user
+        profile = user.profile
+
+        user.first_name = request.data.get('first_name', user.first_name)
+        user.last_name = request.data.get('last_name', user.last_name)
+        user.email = request.data.get('email', user.email)
+
+        password = request.data.get('password')
+        if password:
+            user.set_password(password)
+
+        user.save()
+
+        profile.bio = request.data.get('bio', profile.bio)
+        profile.avatar = request.data.get('avatar', profile.avatar)
+        profile.save()
+
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
+
     @action(detail=True, methods=['post'])
     def follow(self, request, pk=None):
         user_to_follow = self.get_object()
