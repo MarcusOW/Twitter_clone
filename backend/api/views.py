@@ -27,10 +27,12 @@ class TweetViewSet(viewsets.ModelViewSet):
         if not request.user.is_authenticated:
             return Response({"detail": "Not authenticated"}, status=401)
 
-        # Obtém os IDs dos usuários que o usuário atual segue
+        # Pega os IDs dos usuários que o usuário atual segue
         following_ids = request.user.following.values_list('id', flat=True)
-        tweets = Tweet.objects.filter(author__in=following_ids).order_by('-created_at')
-        
+        # Inclui o próprio usuário na lista de autores
+        author_ids = list(following_ids) + [request.user.id]
+        tweets = Tweet.objects.filter(author__in=author_ids).order_by('-created_at')
+
         page = self.paginate_queryset(tweets)
         if page is not None:
             serializer = self.get_serializer(page, many=True)
