@@ -84,14 +84,14 @@ const EditProfile = ({ onClose, onUpdate }) => {
           <button
             type="submit"
             disabled={loading}
-            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 cursor-pointer transition disabled:opacity-50"
           >
             {loading ? "Salvando..." : "Salvar"}
           </button>
           <button
             type="button"
             onClick={onClose}
-            className="bg-gray-300 px-4 py-2 rounded"
+            className="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400 cursor-pointer transition"
           >
             Cancelar
           </button>

@@ -12,7 +12,6 @@ const CommentSection = ({ tweetId }) => {
       const data = response.data;
       console.log(`Comentários do tweet ${tweetId}:`, data);
 
-      // Garantir que sempre seja um array
       let commentsArray = [];
       if (data) {
         if (Array.isArray(data)) {
@@ -72,7 +71,7 @@ const CommentSection = ({ tweetId }) => {
         <button
           type="submit"
           disabled={loading || !content.trim()}
-          className="bg-blue-500 text-white px-3 py-1 rounded text-sm disabled:opacity-50"
+          className="bg-blue-500 text-white px-3 py-1 rounded text-sm disabled:opacity-50 cursor-pointer transition hover:bg-blue-600"
         >
           {loading ? "..." : "Comentar"}
         </button>
