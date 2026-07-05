@@ -106,7 +106,7 @@ const UserProfile = () => {
                 {isOwnProfile && (
                   <button
                     onClick={() => setShowEdit(true)}
-                    className="bg-blue-500 text-white px-4 py-1 rounded-full text-sm hover:bg-blue-600 transition"
+                    className="bg-blue-500 text-white px-4 py-1 rounded-full text-sm hover:bg-blue-600 transition cursor-pointer"
                   >
                     Editar Perfil
                   </button>
